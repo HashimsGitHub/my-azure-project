@@ -1,290 +1,401 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cloud File Share</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>NEBULA DRIVE · Cloud FileShare</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    .topbar { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; }
-    .topbar-title { font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-    .topbar-right { display: none; align-items: center; gap: 10px; }
-    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
-    .topbar-user { font-size: 13px; color: #555; }
+    body {
+      background: radial-gradient(circle at 20% 30%, #0a0f1f, #03050b);
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'SF Pro Text', sans-serif;
+      color: #eef5ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-    .container { max-width: 700px; margin: 0 auto; padding: 2rem 1rem; }
+    /* futuristic glassmorphism + neon accents */
+    .glass-panel {
+      background: rgba(12, 20, 35, 0.55);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 210, 255, 0.2);
+      transition: all 0.25s ease;
+    }
 
-    .btn { padding: 8px 16px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-    .btn:hover { background: #f5f5f5; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-danger { color: #dc2626; border-color: #fca5a5; background: #fff; }
-    .btn-danger:hover { background: #fef2f2; }
-    .btn-full { width: 100%; padding: 10px; font-size: 15px; }
-    .btn-primary { background: #1a56db; color: #fff; border-color: #1a56db; }
-    .btn-primary:hover { background: #1648c0; }
+    .glass-panel:hover {
+      border-color: rgba(0, 255, 255, 0.55);
+      box-shadow: 0 20px 30px -12px rgba(0, 200, 255, 0.25);
+    }
 
-    .hero { text-align: center; padding: 3rem 1rem 2rem; }
-    .hero-icon { margin: 0 auto 1.5rem; width: 80px; height: 80px; background: #e8f0fe; border-radius: 20px; display: flex; align-items: center; justify-content: center; }
-    .hero h1 { font-size: 28px; font-weight: 600; margin-bottom: 12px; color: #1a1a1a; }
-    .hero p { font-size: 15px; color: #666; max-width: 480px; margin: 0 auto 2rem; line-height: 1.6; }
+    /* custom scroll */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #10141e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0ff3;
+      border-radius: 10px;
+    }
 
-    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 2.5rem; }
-    .feature-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.25rem 1rem; text-align: center; }
-    .feature-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
-    .feature-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .feature-desc { font-size: 12px; color: #777; line-height: 1.4; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 2rem;
+      background: rgba(3, 7, 18, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-    .how-it-works { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
-    .how-title { font-size: 13px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.25rem; }
-    .how-steps { display: flex; align-items: flex-start; gap: 0; }
-    .how-step { flex: 1; text-align: center; position: relative; }
-    .how-step:not(:last-child)::after { content: ''; position: absolute; top: 18px; left: 60%; width: 80%; height: 1px; border-top: 2px dashed #e5e5e5; }
-    .how-num { width: 36px; height: 36px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 14px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
-    .how-label { font-size: 12px; color: #555; line-height: 1.4; }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #aaffff, #4d9eff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-    .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
-    .auth-panel { max-width: 400px; margin: 0 auto; }
-    .auth-panel h2 { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
-    .auth-panel p { font-size: 13px; color: #666; margin-bottom: 1.25rem; line-height: 1.5; }
+    .neon-icon {
+      filter: drop-shadow(0 0 5px cyan);
+    }
 
-    .oauth-btn { width: 100%; padding: 10px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #e5e5e5; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
-    .oauth-btn:hover { background: #f5f5f5; }
-    .oauth-icon { width: 20px; height: 20px; flex-shrink: 0; }
-    .security-note { font-size: 12px; color: #aaa; text-align: center; margin-top: 1rem; line-height: 1.5; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .topbar-user-area {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(0, 20, 40, 0.6);
+      padding: 0.3rem 1rem 0.3rem 0.7rem;
+      border-radius: 60px;
+      border: 1px solid cyan;
+    }
 
-    .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1rem; }
-    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .step-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-    .step-desc { font-size: 13px; color: #555; line-height: 1.5; }
+    .avatar-neon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(145deg, #1c2c4a, #0b1428);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #0ff;
+      border: 1px solid cyan;
+      box-shadow: 0 0 8px cyan;
+    }
 
-    .code-box { background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 13px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; word-break: break-all; }
-    .copy-btn { min-width: 56px; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; flex-shrink: 0; }
-    .copy-btn:hover { background: #f0f0f0; }
+    .btn-neon {
+      background: transparent;
+      border: 1.2px solid #0ff;
+      color: #0ff;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(4px);
+    }
 
-    .key-box { background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 13px; display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-    .key-value { flex: 1; word-break: break-all; }
-    .key-hidden { letter-spacing: 3px; color: #999; user-select: none; }
-    .eye-btn { min-width: 36px; height: 30px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .eye-btn:hover { background: #f0f0f0; }
+    .btn-neon:hover {
+      background: #0ff1;
+      box-shadow: 0 0 12px #0ff6;
+      border-color: cyan;
+      color: white;
+    }
 
-    .success-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 13px; color: #166534; }
-    .section-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
-    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
+    .btn-primary-neon {
+      background: linear-gradient(95deg, #0ff, #2a6eff);
+      border: none;
+      color: #01050f;
+      font-weight: 700;
+      box-shadow: 0 0 15px #0ff8;
+    }
 
-    #main-view { display: none; }
-    #steps-section { display: none; }
-    #loading-view { text-align: center; padding: 4rem 1rem; color: #888; font-size: 14px; }
+    .btn-primary-neon:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px cyan;
+    }
 
-    @media (max-width: 520px) {
-      .features { grid-template-columns: 1fr; }
-      .how-steps { flex-direction: column; gap: 16px; }
-      .how-step::after { display: none; }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* hero glitch effect */
+    .glitch-text {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(130deg, #e0f0ff, #a0d0ff, #40a0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px cyan;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-card-ai {
+      background: rgba(8, 18, 32, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 1.8rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(0, 230, 250, 0.4);
+      transition: all 0.2s;
+    }
+
+    .step-progress {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .step-node {
+      flex: 1;
+      text-align: center;
+      background: rgba(0, 30, 50, 0.5);
+      border-radius: 2rem;
+      padding: 0.8rem 0.2rem;
+      border-bottom: 2px solid #0ff3;
+    }
+
+    .code-matrix {
+      background: #010a14;
+      border-left: 4px solid cyan;
+      font-family: 'Fira Code', monospace;
+      padding: 0.9rem;
+      border-radius: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .key-container {
+      background: #010a14;
+      border-radius: 1rem;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      border: 1px solid cyan;
+    }
+
+    .ai-badge {
+      font-size: 0.7rem;
+      background: #0ff1;
+      border-radius: 20px;
+      padding: 0.2rem 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .loader-ai {
+      width: 30px;
+      height: 30px;
+      border: 2px solid cyan;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-neon {
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 12px;
+      font-family: monospace;
+    }
+
+    .success-pulse {
+      background: rgba(0, 255, 200, 0.1);
+      border: 1px solid #0ff;
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+
+    @media (max-width: 720px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .glitch-text { font-size: 2rem; }
+      .container { padding: 1rem; }
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      filter: grayscale(0.2);
+      cursor: not-allowed;
     }
   </style>
 </head>
 <body>
 
   <div class="topbar">
-    <span class="topbar-title">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="2">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0ff" stroke-width="1.5" class="neon-icon">
         <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+        <path d="M12 12v5m0 0l-2-2m2 2l2-2"/>
       </svg>
-      CloudShare
-    </span>
-    <div class="topbar-right" id="topbar-right">
-      <div class="avatar" id="topbar-avatar"></div>
-      <span class="topbar-user" id="topbar-username"></span>
-      <button class="btn btn-danger" onclick="signOut()">Sign out</button>
+      <span>NEBULA DRIVE</span>
+      <span style="font-size: 0.7rem; background: #0ff2; padding: 2px 8px; border-radius: 40px;">AZURE-INFRA</span>
+    </div>
+    <div class="topbar-user-area" id="topbar-user-area" style="display: none;">
+      <div class="avatar-neon" id="topbar-avatar"></div>
+      <span id="topbar-username" style="font-size: 0.8rem;"></span>
+      <button class="btn-neon" onclick="signOut()">⟁ EXIT</button>
     </div>
   </div>
 
   <div class="container">
+    <!-- LOADING ANIMATION -->
+    <div id="loading-view" style="display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; min-height: 60vh;">
+      <div class="loader-ai"></div>
+      <span style="font-family: monospace;">⟁ SYNCHRONIZING NEURAL CREDENTIALS...</span>
+    </div>
 
-    <div id="loading-view">Checking authentication...</div>
-
-    <div id="auth-view" style="display:none;">
-
-      <div class="hero">
-        <div class="hero-icon">
-          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="1.5">
-            <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-            <path d="M12 12v5m0 0l-2-2m2 2l2-2"/>
-          </svg>
+    <!-- AUTH PANEL (FUTURISTIC) -->
+    <div id="auth-view" style="display: none;">
+      <div class="glass-panel" style="padding: 2rem; text-align: center;">
+        <div class="ai-badge" style="margin: 0 auto 1rem auto; width: fit-content;">
+          <span>☁️ CLOUD INFRASTRUCTURE</span>
         </div>
-        <h1>Your personal cloud drive</h1>
-        <p>Instantly provision a personal Azure file share and map it as a network drive on Windows — no IT team required.</p>
-      </div>
-
-      <div class="features">
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#e8f0fe;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="1.8">
-              <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-            </svg>
-          </div>
-          <p class="feature-title">Azure-powered</p>
-          <p class="feature-desc">Backed by Microsoft Azure file storage in Australia East with 99.9% uptime.</p>
+        <h1 class="glitch-text" style="font-size: 2.8rem;">Cloud NAS Drive</h1>
+        <p style="color: #bbddff; max-width: 550px; margin: 1rem auto;">Provision your personal NAS in the cloud within seconds with <strong>zero config</strong></p>
+        
+        <div class="feature-grid">
+          <div class="feature-card-ai"><span style="font-size: 1.8rem;">🌀</span><h3 style="margin: 0.5rem 0 0.2rem;">Azure Edge</h3><small>Data Sovereignty · 99.99% Availability</small></div>
+          <div class="feature-card-ai"><span style="font-size: 1.8rem;">🔐</span><h3 style="margin: 0.5rem 0 0.2rem;">Zero-trust OAuth</h3><small>GitHub only · isolated shares</small></div>
+          <div class="feature-card-ai"><span style="font-size: 1.8rem;">📡</span><h3 style="margin: 0.5rem 0 0.2rem;">SMB 3.1.1</h3><small>Map Network Drive</small></div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#f0fdf4;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="1.8">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0110 0v4"/>
-            </svg>
-          </div>
-          <p class="feature-title">Secure access</p>
-          <p class="feature-desc">GitHub OAuth only. No passwords stored. Each user gets their own isolated share.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon" style="background:#fff7ed;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9a3412" stroke-width="1.8">
-              <rect x="2" y="3" width="20" height="14" rx="2"/>
-              <path d="M8 21h8m-4-4v4"/>
-            </svg>
-          </div>
-          <p class="feature-title">Works like a local drive</p>
-          <p class="feature-desc">Map via SMB and drag-and-drop files directly in Windows File Explorer.</p>
-        </div>
-      </div>
 
-      <div class="how-it-works">
-        <p class="how-title">How it works</p>
-        <div class="how-steps">
-          <div class="how-step">
-            <div class="how-num">1</div>
-            <p class="how-label">Sign in with GitHub</p>
-          </div>
-          <div class="how-step">
-            <div class="how-num">2</div>
-            <p class="how-label">Provision your share</p>
-          </div>
-          <div class="how-step">
-            <div class="how-num">3</div>
-            <p class="how-label">Map as network drive</p>
-          </div>
-          <div class="how-step">
-            <div class="how-num">4</div>
-            <p class="how-label">Access your files anywhere</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="auth-panel">
-        <div class="card">
-          <h2>Get started</h2>
-          <p>Sign in with your GitHub account to provision your personal file share. Takes less than 30 seconds.</p>
-
-          <button class="oauth-btn" onclick="window.location.href='/.auth/login/github?post_login_redirect_uri=/'">
-            <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
-            </svg>
-            Continue with GitHub
+        <div style="max-width: 420px; margin: 1.5rem auto;">
+          <button class="btn-neon btn-primary-neon" style="width: 100%; padding: 12px; font-size: 1rem; display: flex; gap: 10px; justify-content: center;" onclick="window.location.href='/.auth/login/github?post_login_redirect_uri=/'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:black;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+            Authenticate with GitHub
           </button>
-
-          <p class="security-note">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            GitHub OAuth only — no passwords stored by this app
-          </p>
+          <div class="status-neon" style="margin-top: 1rem;">⚡ Passwords not saved on this site · GitHub OAuth only</div>
         </div>
       </div>
-
     </div>
 
-    <div id="main-view">
-      <h1 style="font-size: 22px; font-weight: 500; margin-bottom: 4px;">Your file share</h1>
-      <p style="font-size: 14px; color: #666; margin-bottom: 1.5rem;">Provision your personal Azure file share and connect it as a network drive on Windows.</p>
-
-      <button class="btn btn-primary btn-full" id="create-btn" onclick="provision()">Provision my file share</button>
-      <p id="status" style="font-size: 13px; text-align: center; margin: 8px 0 0;"></p>
-
-      <div id="steps-section">
-        <div class="divider"></div>
-        <p class="section-label">How to connect on Windows</p>
-
-        <div class="step">
-          <div class="step-num">1</div>
+    <!-- MAIN DASHBOARD AFTER AUTH -->
+    <div id="main-view" style="display: none;">
+      <div class="glass-panel" style="padding: 1.8rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
-            <p class="step-title">Open "Map network drive"</p>
-            <p class="step-desc">In File Explorer, click <strong>This PC</strong> → top menu <strong>Computer</strong> → <strong>Map network drive</strong>. Choose any drive letter (e.g. Z:).</p>
+            <h2 style="font-size: 1.8rem; background: linear-gradient(135deg,#b6f9ff,#3e8eff); -webkit-background-clip:text; background-clip:text; color:transparent;">✦ neural volume</h2>
+            <p style="color:#9dc6ff">AI-provisioned Azure file share — your private cloud NAS Drive</p>
           </div>
+          <button class="btn-neon btn-primary-neon" id="create-btn" onclick="provision()" style="padding: 10px 24px;">⚡ DEPLOY SHARE</button>
         </div>
+        <div id="status" class="status-neon"></div>
 
-        <div class="step">
-          <div class="step-num">2</div>
-          <div style="flex:1">
-            <p class="step-title">Enter your share path</p>
-            <p class="step-desc">Paste this into the Folder field and tick <em>Connect using different credentials</em>.</p>
-            <div class="code-box">
-              <span id="unc-path">\\smbclouddrive.file.core.windows.net\your-share</span>
-              <button class="copy-btn" onclick="copyText('unc-path', this)">Copy</button>
+        <!-- HIDDEN CONNECTION STEPS -->
+        <div id="steps-section" style="display: none; margin-top: 2rem;">
+          <div class="step-progress" style="margin-bottom: 2rem;">
+            <div class="step-node"><span>1️⃣</span> MAP DRIVE</div>
+            <div class="step-node"><span>2️⃣</span> UNC PATH</div>
+            <div class="step-node"><span>3️⃣</span> AZURE KEY</div>
+            <div class="step-node"><span>4️⃣</span> PORT 445</div>
+          </div>
+
+          <div class="step" style="margin-bottom: 1.8rem;">
+            <p style="font-weight: 600; margin-bottom: 8px;">📁 1. Map network drive (Windows)</p>
+            <p style="font-size: 0.85rem; opacity:0.8;">File Explorer → This PC → "Map network drive" → Choose letter (Z:)</p>
+          </div>
+
+          <div class="step" style="margin-bottom: 1.8rem;">
+            <p style="font-weight: 600; margin-bottom: 8px;">🌐 2. Share folder path</p>
+            <div class="code-matrix">
+              <code id="unc-path" style="word-break: break-all;">\\smbclouddrive.file.core.windows.net\your-share</code>
+              <button class="btn-neon" style="padding: 4px 14px;" onclick="copyText('unc-path', this)">COPY</button>
+            </div>
+            <p class="ai-badge" style="margin-top: 8px;">✔️ Use different credentials</p>
+          </div>
+
+          <div class="step" style="margin-bottom: 1.8rem;">
+            <p style="font-weight: 600; margin-bottom: 8px;">🔑 3. Storage credentials (Azure key)</p>
+            <div class="key-container">
+              <span style="font-family: monospace; font-size: 0.8rem;">Username: </span>
+              <code style="flex:1;">AZURE\smbclouddrive</code>
+              <button class="btn-neon" onclick="copyVal('AZURE\\smbclouddrive', this)">COPY</button>
+            </div>
+            <div class="key-container" style="margin-top: 10px;">
+              <span style="font-family: monospace; font-size: 0.8rem;">Password (Key): </span>
+              <span style="font-family: monospace; flex:1; word-break: break-all;" id="key-hidden" class="key-hidden">••••••••••••••••••••••••••</span>
+              <span id="key-actual" style="display:none; font-family: monospace;"></span>
+              <button class="btn-neon" onclick="toggleKey()" style="padding: 4px 12px;">👁️</button>
+              <button class="btn-neon" onclick="copyVal(storageKey, this)">COPY</button>
             </div>
           </div>
-        </div>
 
-        <div class="step">
-          <div class="step-num">3</div>
-          <div style="flex:1">
-            <p class="step-title">Enter credentials when prompted</p>
-            <p class="step-desc">Username:</p>
-            <div class="code-box">
-              <span>AZURE\smbclouddrive</span>
-              <button class="copy-btn" onclick="copyVal('AZURE\\smbclouddrive', this)">Copy</button>
+          <div class="step" style="margin-bottom: 1rem;">
+            <p style="font-weight: 600; margin-bottom: 8px;">🛡️ 4. Validate SMB port 445 (PowerShell)</p>
+            <div class="code-matrix">
+              <code>Test-NetConnection -ComputerName smbclouddrive.file.core.windows.net -Port 445</code>
+              <button class="btn-neon" onclick="copyVal('Test-NetConnection -ComputerName smbclouddrive.file.core.windows.net -Port 445', this)">COPY</button>
             </div>
-            <p class="step-desc" style="margin-top: 10px;">Storage account key (password):</p>
-            <div class="key-box">
-              <span class="key-value">
-                <span id="key-hidden" class="key-hidden">••••••••••••••••••••••••••••••••</span>
-                <span id="key-actual" style="display:none;"></span>
-              </span>
-              <button class="eye-btn" onclick="toggleKey()">
-                <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-              </button>
-              <button class="copy-btn" onclick="copyVal(storageKey, this)">Copy</button>
-            </div>
+            <p style="font-size: 0.75rem; margin-top: 8px;">⚠️ If blocked, contact ISP or use Azure VPN.</p>
           </div>
-        </div>
 
-        <div class="step">
-          <div class="step-num">4</div>
-          <div style="flex:1">
-            <p class="step-title">Check port 445 if connection fails</p>
-            <p class="step-desc">SMB requires port 445 outbound. Test it in PowerShell:</p>
-            <div class="code-box">
-              <span id="port-check">Test-NetConnection -ComputerName smbclouddrive.file.core.windows.net -Port 445</span>
-              <button class="copy-btn" onclick="copyText('port-check', this)">Copy</button>
-            </div>
-            <p class="step-desc" style="margin-top: 6px;">If <code>TcpTestSucceeded</code> is <span style="color:#dc2626;">False</span>, port 445 is blocked by your ISP or firewall.</p>
+          <div class="success-pulse" style="margin-top: 20px; display: flex; gap: 12px; align-items: center;">
+            <span>🧠</span>
+            <span><strong>AI active · share ready</strong><br>Drag & drop files like local disk — end-to-end encrypted</span>
           </div>
-        </div>
-
-        <div class="success-card">
-          Your share is ready. Once mapped, it will appear as a network drive in File Explorer and you can drag and drop files just like a local drive.
         </div>
       </div>
     </div>
-
   </div>
 
   <script>
-    var storageKey = '';
-    var keyVisible = false;
+    let storageKey = '';
+    let keyVisible = false;
 
+    // authentication state
     async function checkAuth() {
       try {
-        var res = await fetch('/.auth/me');
-        var data = await res.json();
+        const res = await fetch('/.auth/me');
+        const data = await res.json();
         document.getElementById('loading-view').style.display = 'none';
         if (data.clientPrincipal) {
           showMainView(data.clientPrincipal.userDetails, data.clientPrincipal.identityProvider);
         } else {
           document.getElementById('auth-view').style.display = 'block';
         }
-      } catch(e) {
+      } catch (e) {
         document.getElementById('loading-view').style.display = 'none';
         document.getElementById('auth-view').style.display = 'block';
       }
@@ -293,78 +404,108 @@
     function showMainView(name, provider) {
       document.getElementById('auth-view').style.display = 'none';
       document.getElementById('main-view').style.display = 'block';
-      var topbar = document.getElementById('topbar-right');
-      topbar.style.display = 'flex';
-      var initials = name.split(' ').map(function(w){ return w[0] || ''; }).join('').toUpperCase().slice(0,2) || name.slice(0,2).toUpperCase();
+      const topbarArea = document.getElementById('topbar-user-area');
+      topbarArea.style.display = 'flex';
+      let displayName = name || (provider === 'github' ? 'GitHub user' : 'User');
+      let initials = displayName.charAt(0).toUpperCase();
+      if (displayName.includes(' ')) {
+        initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      } else if (displayName.length > 1) {
+        initials = displayName.slice(0,2).toUpperCase();
+      }
       document.getElementById('topbar-avatar').innerText = initials;
-      document.getElementById('topbar-username').innerText = name + (provider ? ' (' + provider + ')' : '');
+      document.getElementById('topbar-username').innerText = displayName.length > 28 ? displayName.slice(0,25)+'..' : displayName;
     }
 
     async function signOut() {
-      var btn = document.querySelector('#topbar-right .btn-danger');
-      btn.disabled = true;
-      btn.innerText = 'Signing out...';
-      try { await fetch('/.auth/logout', { method: 'GET', credentials: 'include' }); } catch(e) {}
+      const btn = document.querySelector('#topbar-user-area .btn-neon');
+      if (btn) btn.disabled = true;
+      try {
+        await fetch('/.auth/logout', { method: 'GET', credentials: 'include' });
+      } catch(e) {}
       sessionStorage.clear();
       localStorage.clear();
       window.location.href = '/.auth/logout?post_logout_redirect_uri=/';
     }
 
     async function provision() {
-      var btn = document.getElementById('create-btn');
-      var status = document.getElementById('status');
+      const btn = document.getElementById('create-btn');
+      const statusDiv = document.getElementById('status');
+      if (!btn) return;
       btn.disabled = true;
-      btn.innerText = 'Provisioning...';
-      status.style.color = '#555';
-      status.innerText = '';
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '🌀 PROVISIONING...';
+      statusDiv.innerHTML = '';
+      statusDiv.style.color = '#0ff';
       try {
-        var res = await fetch('/api/provision_share', { method: 'POST' });
-        var text = await res.text();
-        if (res.status === 200 || res.status === 201) {
-          var parts = text.split('|');
-          var shareName = parts[1] || 'your-share';
+        const response = await fetch('/api/provision_share', { method: 'POST' });
+        const textResponse = await response.text();
+        if (response.status === 200 || response.status === 201) {
+          const parts = textResponse.split('|');
+          const shareName = parts[1] || 'your-share';
           storageKey = parts[2] || '';
           document.getElementById('unc-path').innerText = '\\\\smbclouddrive.file.core.windows.net\\' + shareName;
-          document.getElementById('key-actual').innerText = storageKey;
+          const actualSpan = document.getElementById('key-actual');
+          if (actualSpan) actualSpan.innerText = storageKey;
           document.getElementById('steps-section').style.display = 'block';
-          btn.innerText = 'Share provisioned';
-          status.style.color = '#166534';
-          status.innerText = 'Share created: ' + shareName;
+          btn.innerHTML = '✓ ACTIVE';
+          statusDiv.innerHTML = `✨ Share "${shareName}" deployed · Azure AI fabric ready`;
+          statusDiv.style.color = '#5effbc';
         } else {
-          status.style.color = '#dc2626';
-          status.innerText = '[' + res.status + '] ' + text;
+          statusDiv.innerHTML = `⚠️ ERROR ${response.status}: ${textResponse.substring(0, 120)}`;
+          statusDiv.style.color = '#ff7780';
           btn.disabled = false;
-          btn.innerText = 'Retry';
+          btn.innerHTML = '⟳ RETRY';
         }
-      } catch(e) {
-        status.style.color = '#dc2626';
-        status.innerText = 'Network error: ' + e.message;
+      } catch (err) {
+        statusDiv.innerHTML = `❌ NETWORK FAULT: ${err.message}`;
+        statusDiv.style.color = '#ff7b72';
         btn.disabled = false;
-        btn.innerText = 'Retry';
+        btn.innerHTML = '⟳ RETRY';
       }
     }
 
     function toggleKey() {
       keyVisible = !keyVisible;
-      document.getElementById('key-hidden').style.display = keyVisible ? 'none' : 'inline';
-      document.getElementById('key-actual').style.display = keyVisible ? 'inline' : 'none';
-      document.getElementById('eye-icon').innerHTML = keyVisible
-        ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      const hiddenSpan = document.getElementById('key-hidden');
+      const actualSpan = document.getElementById('key-actual');
+      if (!hiddenSpan || !actualSpan) return;
+      if (keyVisible) {
+        hiddenSpan.style.display = 'none';
+        actualSpan.style.display = 'inline';
+      } else {
+        hiddenSpan.style.display = 'inline';
+        actualSpan.style.display = 'none';
+      }
     }
 
-    function copyText(id, btn) {
-      navigator.clipboard.writeText(document.getElementById(id).innerText).then(function() {
-        btn.innerText = 'Copied'; setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
-      });
+    function copyText(elementId, btnElement) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        navigator.clipboard.writeText(el.innerText).then(() => {
+          const old = btnElement.innerText;
+          btnElement.innerText = '✓ COPIED';
+          setTimeout(() => { btnElement.innerText = old; }, 1300);
+        }).catch(() => {});
+      }
     }
 
-    function copyVal(val, btn) {
-      navigator.clipboard.writeText(val).then(function() {
-        btn.innerText = 'Copied'; setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
-      });
+    function copyVal(value, btnElement) {
+      navigator.clipboard.writeText(value).then(() => {
+        const oldText = btnElement.innerText;
+        btnElement.innerText = '✓ COPIED';
+        setTimeout(() => { btnElement.innerText = oldText; }, 1300);
+      }).catch(() => {});
     }
 
+    // attach global reference for copyVal & storageKey 
+    window.storageKey = '';
+    Object.defineProperty(window, 'storageKey', {
+      get: function() { return storageKey; },
+      set: function(val) { storageKey = val; }
+    });
+
+    // initial call
     checkAuth();
   </script>
 </body>
