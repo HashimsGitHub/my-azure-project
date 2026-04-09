@@ -6,164 +6,360 @@
   <title>Cloud File Share</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+
+    .topbar { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar-title { font-size: 15px; font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    .topbar-user { font-size: 13px; color: #555; }
+
     .container { max-width: 640px; margin: 0 auto; padding: 2rem 1rem; }
-    h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
-    .subtitle { font-size: 14px; color: #666; margin-bottom: 1.5rem; }
+
+    .btn { padding: 8px 16px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    .btn:hover { background: #f5f5f5; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: #1a56db; color: #fff; border-color: #1a56db; }
+    .btn-primary:hover { background: #1648c0; }
+    .btn-danger { background: #fff; color: #dc2626; border-color: #dc2626; }
+    .btn-danger:hover { background: #fef2f2; }
+    .btn-full { width: 100%; padding: 10px; font-size: 15px; }
+
     .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-    .provision-btn { width: 100%; padding: 10px; font-size: 15px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-    .provision-btn:hover { background: #f5f5f5; }
-    .provision-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .auth-panel { max-width: 400px; margin: 3rem auto; }
+    .auth-panel h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+    .auth-panel p { font-size: 13px; color: #666; margin-bottom: 1.25rem; }
+    .auth-tabs { display: flex; gap: 0; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; }
+    .auth-tab { flex: 1; padding: 8px; font-size: 14px; border: none; background: #fff; cursor: pointer; color: #555; }
+    .auth-tab.active { background: #1a56db; color: #fff; font-weight: 500; }
+
+    .field { margin-bottom: 1rem; }
+    .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; color: #333; }
+    .field input { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; outline: none; background: #fff; color: #1a1a1a; }
+    .field input:focus { border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
+
+    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
+    .github-btn { width: 100%; padding: 9px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .github-btn:hover { background: #f5f5f5; }
+    .github-icon { width: 18px; height: 18px; }
+
     .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1rem; }
-    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .step-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
     .step-desc { font-size: 13px; color: #555; line-height: 1.5; }
+
     .code-box { background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 13px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; word-break: break-all; }
-    .copy-btn { min-width: 56px; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    .copy-btn { min-width: 56px; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; flex-shrink: 0; }
     .copy-btn:hover { background: #f0f0f0; }
-    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
+
+    .key-box { background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 13px; display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .key-value { flex: 1; word-break: break-all; color: #1a1a1a; }
+    .key-hidden { letter-spacing: 3px; color: #999; user-select: none; }
+    .eye-btn { min-width: 36px; height: 30px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .eye-btn:hover { background: #f0f0f0; }
+
     .success-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 13px; color: #166534; }
-    #status { font-size: 13px; text-align: center; margin: 8px 0 0; }
-    #steps-section { display: none; }
+    .error-msg { font-size: 13px; color: #dc2626; text-align: center; margin: 8px 0 0; }
     .section-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+
+    #main-view { display: none; }
+    #steps-section { display: none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Cloud file share</h1>
-    <p class="subtitle">Provision your personal Azure file share and connect it as a network drive on Windows.</p>
 
-    <div class="card">
-      <div id="user-info" style="font-size: 14px; color: #555;">Checking login...</div>
-      <div id="login-prompt" style="display:none; margin-top: 8px;">
-        <a href="/.auth/login/github" style="font-size: 14px; color: #1a56db; text-decoration: none;">Login with GitHub to continue →</a>
-      </div>
-    </div>
-
-    <button class="provision-btn" id="create-btn" style="display:none;" onclick="provision()">Provision my file share</button>
-    <p id="status"></p>
-
-    <div id="steps-section">
-      <div class="divider"></div>
-      <p class="section-label">How to connect on Windows</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div>
-          <p class="step-title">Open "Map network drive"</p>
-          <p class="step-desc">In File Explorer, click <strong>This PC</strong> → top menu <strong>Computer</strong> → <strong>Map network drive</strong>. Choose any drive letter (e.g. Z:).</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div style="flex:1">
-          <p class="step-title">Enter your share path</p>
-          <p class="step-desc">Paste this into the Folder field and tick <em>Connect using different credentials</em>.</p>
-          <div class="code-box">
-            <span id="unc-path">\\smbclouddrive.file.core.windows.net\your-share</span>
-            <button class="copy-btn" onclick="copyText('unc-path', this)">Copy</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div style="flex:1">
-          <p class="step-title">Enter credentials when prompted</p>
-          <div class="code-box">
-            <span>AZURE\smbclouddrive</span>
-            <button class="copy-btn" onclick="copyVal('AZURE\\smbclouddrive', this)">Copy</button>
-          </div>
-          <div class="code-box" style="margin-top: 6px;">
-            <span style="color: #888; font-size: 12px;">Use Storage Account key from Azure Portal → Access keys → key1</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div style="flex:1">
-          <p class="step-title">Check port 445 if connection fails</p>
-          <p class="step-desc">SMB requires port 445 outbound. Test it in PowerShell:</p>
-          <div class="code-box">
-            <span id="port-check">Test-NetConnection -ComputerName smbclouddrive.file.core.windows.net -Port 445</span>
-            <button class="copy-btn" onclick="copyText('port-check', this)">Copy</button>
-          </div>
-          <p class="step-desc" style="margin-top: 6px;">If <code>TcpTestSucceeded</code> is <span style="color: #dc2626;">False</span>, port 445 is blocked by your ISP or firewall.</p>
-        </div>
-      </div>
-
-      <div class="success-card">
-        Your share is ready. Once mapped, it will appear as a network drive in File Explorer and you can drag and drop files just like a local drive.
-      </div>
+  <div class="topbar">
+    <span class="topbar-title">Cloud file share</span>
+    <div class="topbar-right" id="topbar-right" style="display:none;">
+      <div class="avatar" id="topbar-avatar">?</div>
+      <span class="topbar-user" id="topbar-username"></span>
+      <button class="btn btn-danger" onclick="signOut()">Sign out</button>
     </div>
   </div>
 
+  <div class="container">
+
+    <div id="auth-view">
+      <div class="auth-panel">
+        <div class="card">
+          <h2>Welcome</h2>
+          <p>Sign in or register to provision your personal Azure file share.</p>
+
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign in</button>
+            <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+          </div>
+
+          <div id="signin-form">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="signin-email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="signin-password" placeholder="••••••••">
+            </div>
+            <p id="signin-error" class="error-msg" style="margin-bottom:8px;"></p>
+            <button class="btn btn-primary btn-full" onclick="handleSignIn()">Sign in</button>
+          </div>
+
+          <div id="register-form" style="display:none;">
+            <div class="field">
+              <label>Full name</label>
+              <input type="text" id="reg-name" placeholder="Hashim Ahmed">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="reg-email" placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="reg-password" placeholder="••••••••">
+            </div>
+            <p id="reg-error" class="error-msg" style="margin-bottom:8px;"></p>
+            <button class="btn btn-primary btn-full" onclick="handleRegister()">Create account</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <button class="github-btn" onclick="window.location.href='/.auth/login/github'">
+            <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+            </svg>
+            Continue with GitHub
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-view">
+      <h1 style="font-size: 22px; font-weight: 500; margin-bottom: 4px;">Your file share</h1>
+      <p style="font-size: 14px; color: #666; margin-bottom: 1.5rem;">Provision your personal Azure file share and connect it as a network drive on Windows.</p>
+
+      <button class="btn btn-primary btn-full" id="create-btn" onclick="provision()">Provision my file share</button>
+      <p id="status" style="font-size: 13px; text-align: center; margin: 8px 0 0;"></p>
+
+      <div id="steps-section">
+        <div class="divider"></div>
+        <p class="section-label">How to connect on Windows</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <p class="step-title">Open "Map network drive"</p>
+            <p class="step-desc">In File Explorer, click <strong>This PC</strong> → top menu <strong>Computer</strong> → <strong>Map network drive</strong>. Choose any drive letter (e.g. Z:).</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div style="flex:1">
+            <p class="step-title">Enter your share path</p>
+            <p class="step-desc">Paste this into the Folder field and tick <em>Connect using different credentials</em>.</p>
+            <div class="code-box">
+              <span id="unc-path">\\smbclouddrive.file.core.windows.net\your-share</span>
+              <button class="copy-btn" onclick="copyText('unc-path', this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div style="flex:1">
+            <p class="step-title">Enter credentials when prompted</p>
+            <p class="step-desc">Username:</p>
+            <div class="code-box">
+              <span>AZURE\smbclouddrive</span>
+              <button class="copy-btn" onclick="copyVal('AZURE\\smbclouddrive', this)">Copy</button>
+            </div>
+            <p class="step-desc" style="margin-top: 10px;">Storage account key (password):</p>
+            <div class="key-box">
+              <span class="key-value" id="key-display">
+                <span id="key-hidden" class="key-hidden">••••••••••••••••••••••••••••••••</span>
+                <span id="key-actual" style="display:none;"></span>
+              </span>
+              <button class="eye-btn" id="eye-btn" onclick="toggleKey()">
+                <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+              <button class="copy-btn" onclick="copyVal(storageKey, this)">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div style="flex:1">
+            <p class="step-title">Check port 445 if connection fails</p>
+            <p class="step-desc">SMB requires port 445 outbound. Test it in PowerShell:</p>
+            <div class="code-box">
+              <span id="port-check">Test-NetConnection -ComputerName smbclouddrive.file.core.windows.net -Port 445</span>
+              <button class="copy-btn" onclick="copyText('port-check', this)">Copy</button>
+            </div>
+            <p class="step-desc" style="margin-top: 6px;">If <code>TcpTestSucceeded</code> is <span style="color:#dc2626;">False</span>, port 445 is blocked by your ISP or firewall.</p>
+          </div>
+        </div>
+
+        <div class="success-card">
+          Your share is ready. Once mapped, it will appear as a network drive in File Explorer and you can drag and drop files just like a local drive.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <script>
+    var storageKey = '';
+    var keyVisible = false;
+    var currentUser = null;
+
+    var DEMO_USERS = JSON.parse(localStorage.getItem('swa_users') || '{}');
+
+    function saveUsers() {
+      localStorage.setItem('swa_users', JSON.stringify(DEMO_USERS));
+    }
+
+    function switchTab(tab) {
+      document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
+      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+      document.getElementById('signin-form').style.display = tab === 'signin' ? 'block' : 'none';
+      document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+      document.getElementById('signin-error').innerText = '';
+      document.getElementById('reg-error').innerText = '';
+    }
+
+    function handleSignIn() {
+      var email = document.getElementById('signin-email').value.trim();
+      var password = document.getElementById('signin-password').value;
+      var err = document.getElementById('signin-error');
+      if (!email || !password) { err.innerText = 'Please fill in all fields.'; return; }
+      var user = DEMO_USERS[email];
+      if (!user || user.password !== password) { err.innerText = 'Invalid email or password.'; return; }
+      loginUser(user.name, email);
+    }
+
+    function handleRegister() {
+      var name = document.getElementById('reg-name').value.trim();
+      var email = document.getElementById('reg-email').value.trim();
+      var password = document.getElementById('reg-password').value;
+      var err = document.getElementById('reg-error');
+      if (!name || !email || !password) { err.innerText = 'Please fill in all fields.'; return; }
+      if (password.length < 6) { err.innerText = 'Password must be at least 6 characters.'; return; }
+      if (DEMO_USERS[email]) { err.innerText = 'An account with this email already exists.'; return; }
+      DEMO_USERS[email] = { name: name, email: email, password: password };
+      saveUsers();
+      loginUser(name, email);
+    }
+
+    function loginUser(name, email) {
+      currentUser = { name: name, email: email };
+      localStorage.setItem('swa_session', JSON.stringify(currentUser));
+      showMainView(name);
+    }
+
+    function signOut() {
+      localStorage.removeItem('swa_session');
+      currentUser = null;
+      document.getElementById('auth-view').style.display = 'block';
+      document.getElementById('main-view').style.display = 'none';
+      document.getElementById('topbar-right').style.display = 'none';
+      document.getElementById('steps-section').style.display = 'none';
+      document.getElementById('create-btn').disabled = false;
+      document.getElementById('create-btn').innerText = 'Provision my file share';
+      document.getElementById('status').innerText = '';
+      window.location.href = '/.auth/logout';
+    }
+
+    function showMainView(name) {
+      document.getElementById('auth-view').style.display = 'none';
+      document.getElementById('main-view').style.display = 'block';
+      document.getElementById('topbar-right').style.display = 'flex';
+      var initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2);
+      document.getElementById('topbar-avatar').innerText = initials;
+      document.getElementById('topbar-username').innerText = name;
+    }
+
     async function checkAuth() {
-      try {
-        const res = await fetch('/.auth/me');
-        const data = await res.json();
-        if (data.clientPrincipal) {
-          document.getElementById('user-info').innerHTML =
-            `Logged in as <strong>${data.clientPrincipal.userDetails}</strong>`;
-          document.getElementById('create-btn').style.display = 'block';
-        } else {
-          document.getElementById('user-info').innerText = 'You are not logged in.';
-          document.getElementById('login-prompt').style.display = 'block';
-        }
-      } catch(e) {
-        document.getElementById('user-info').innerText = 'Could not check login status.';
+      var session = localStorage.getItem('swa_session');
+      if (session) {
+        currentUser = JSON.parse(session);
+        showMainView(currentUser.name);
+        return;
       }
+      try {
+        var res = await fetch('/.auth/me');
+        var data = await res.json();
+        if (data.clientPrincipal) {
+          var name = data.clientPrincipal.userDetails;
+          currentUser = { name: name, email: '' };
+          showMainView(name);
+        }
+      } catch(e) {}
     }
 
     async function provision() {
-      const btn = document.getElementById('create-btn');
-      const status = document.getElementById('status');
+      var btn = document.getElementById('create-btn');
+      var status = document.getElementById('status');
       btn.disabled = true;
       btn.innerText = 'Provisioning...';
+      status.style.color = '#555';
       status.innerText = '';
 
       try {
-        const res = await fetch('/api/provision_share', { method: 'POST' });
-        const text = await res.text();
+        var res = await fetch('/api/provision_share', { method: 'POST' });
+        var text = await res.text();
 
         if (res.status === 200 || res.status === 201) {
-          const match = text.match(/share '([^']+)'/);
-          const shareName = match ? match[1] : 'your-share';
-          const uncPath = `\\\\smbclouddrive.file.core.windows.net\\${shareName}`;
+          var parts = text.split('|');
+          var shareName = parts[1] || 'your-share';
+          storageKey = parts[2] || '';
+          var uncPath = '\\\\smbclouddrive.file.core.windows.net\\' + shareName;
           document.getElementById('unc-path').innerText = uncPath;
+          document.getElementById('key-actual').innerText = storageKey;
           document.getElementById('steps-section').style.display = 'block';
           btn.innerText = 'Share provisioned';
           status.style.color = '#166534';
-          status.innerText = `Share created: ${shareName}`;
+          status.innerText = 'Share created: ' + shareName;
         } else {
           status.style.color = '#dc2626';
-          status.innerText = `[${res.status}] ${text}`;
+          status.innerText = '[' + res.status + '] ' + text;
           btn.disabled = false;
           btn.innerText = 'Retry';
         }
       } catch(e) {
         status.style.color = '#dc2626';
-        status.innerText = `Network error: ${e.message}`;
+        status.innerText = 'Network error: ' + e.message;
         btn.disabled = false;
         btn.innerText = 'Retry';
       }
     }
 
+    function toggleKey() {
+      keyVisible = !keyVisible;
+      document.getElementById('key-hidden').style.display = keyVisible ? 'none' : 'inline';
+      document.getElementById('key-actual').style.display = keyVisible ? 'inline' : 'none';
+      var icon = document.getElementById('eye-icon');
+      if (keyVisible) {
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+      } else {
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      }
+    }
+
     function copyText(id, btn) {
-      const val = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(val).then(() => {
+      navigator.clipboard.writeText(document.getElementById(id).innerText).then(function() {
         btn.innerText = 'Copied';
-        setTimeout(() => btn.innerText = 'Copy', 1500);
+        setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
       });
     }
 
     function copyVal(val, btn) {
-      navigator.clipboard.writeText(val).then(() => {
+      navigator.clipboard.writeText(val).then(function() {
         btn.innerText = 'Copied';
-        setTimeout(() => btn.innerText = 'Copy', 1500);
+        setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
       });
     }
 

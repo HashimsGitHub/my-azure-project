@@ -5,6 +5,8 @@ from azure.storage.fileshare import ShareServiceClient
 from azure.core.exceptions import ResourceExistsError
 from pymongo import MongoClient
 
+STORAGE_KEY = "dWntrzHQ7hTveH+CstTTc13m+/QC9PkkPUPM7pdPcoTXUCC6jTU64s8r2rMuyDX9vnan2BFmj9Us+AStYFfaBg=="
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     conn_str = os.environ.get("STORAGE_CONNECTION_STRING")
     mongo_uri = os.environ.get("MONGODB_URI")
@@ -32,12 +34,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             )
         except Exception as db_err:
             return func.HttpResponse(
-                f"Share created but DB log failed: {str(db_err)}",
+                f"Share created but DB log failed: {str(db_err)}|{share_name}|{STORAGE_KEY}",
                 status_code=201
             )
 
         return func.HttpResponse(
-            f"Success: share '{share_name}' created and DB updated.",
+            f"Success: share '{share_name}' created and DB updated.|{share_name}|{STORAGE_KEY}",
             status_code=201
         )
 
