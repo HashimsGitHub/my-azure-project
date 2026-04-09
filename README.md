@@ -25,6 +25,13 @@
 - ☁️ **Azure-Powered** — Leverages Azure SMB File Share for reliable, scalable storage
 
 ---
+<img width="1750" height="788" alt="image" src="https://github.com/user-attachments/assets/1d375f65-c176-459d-8939-7de742f5a620" />
+
+<img width="1788" height="300" alt="image" src="https://github.com/user-attachments/assets/20cf3654-e29f-4e7c-8bbb-d0626645182c" />
+
+<img width="1801" height="1057" alt="image" src="https://github.com/user-attachments/assets/30e21b4c-cade-4fa7-bba3-2d23f0d33944" />
+
+---
 
 ## 🏗️ Architecture
 
@@ -45,87 +52,9 @@ Azure SMB File Share (Storage Account)
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
-- [Azure Subscription](https://azure.microsoft.com/en-au/free/)
-- Azure Storage Account with SMB File Share enabled
-- Node.js (or relevant runtime) installed
-- Azure CLI (optional, for deployment)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/nebula-drive.git
-   cd nebula-drive
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment variables**
-
-   Create a `.env` file in the root directory:
-   ```env
-   AZURE_STORAGE_ACCOUNT_NAME=your_storage_account_name
-   AZURE_STORAGE_ACCOUNT_KEY=your_storage_account_key
-   AZURE_FILE_SHARE_NAME=your_file_share_name
-   PORT=3000
-   ```
-
-4. **Run the application locally**
-   ```bash
-   npm start
-   ```
-
-5. **Open in browser**
-   ```
-   http://localhost:3000
-   ```
+Visit www.nebuladrive.cloud 
 
 ---
-
-## ☁️ Deployment
-
-Nebula Drive is deployed on **Azure App Service**.
-
-### Deploy via Azure CLI
-
-```bash
-az login
-az webapp up \
-  --name nebula-drive \
-  --resource-group your-resource-group \
-  --runtime "NODE:18-lts" \
-  --sku B1
-```
-
-### Deploy via GitHub Actions
-
-Ensure the following secrets are set in your GitHub repository:
-
-| Secret | Description |
-|--------|-------------|
-| `AZURE_WEBAPP_PUBLISH_PROFILE` | Azure Web App publish profile |
-| `AZURE_STORAGE_ACCOUNT_NAME` | Storage account name |
-| `AZURE_STORAGE_ACCOUNT_KEY` | Storage account key |
-| `AZURE_FILE_SHARE_NAME` | File share name |
-
----
-
-## 🔧 Configuration
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `AZURE_STORAGE_ACCOUNT_NAME` | Azure Storage Account name | ✅ |
-| `AZURE_STORAGE_ACCOUNT_KEY` | Azure Storage Account access key | ✅ |
-| `AZURE_FILE_SHARE_NAME` | Name of the SMB File Share | ✅ |
-| `PORT` | Port to run the web server | ❌ (default: 3000) |
-
----
-
 ## 🛡️ Security
 
 - All credentials are managed via environment variables — never hardcoded
@@ -148,17 +77,6 @@ Ensure the following secrets are set in your GitHub repository:
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! To get started:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
----
 
 ## 📄 License
 
