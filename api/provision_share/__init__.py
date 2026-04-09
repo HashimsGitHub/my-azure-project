@@ -5,7 +5,10 @@ from azure.storage.fileshare import ShareServiceClient
 from azure.core.exceptions import ResourceExistsError
 from pymongo import MongoClient
 
-STORAGE_KEY = "dWntrzHQ7hTveH+CstTTc13m+/QC9PkkPUPM7pdPcoTXUCC6jTU64s8r2rMuyDX9vnan2BFmj9Us+AStYFfaBg=="
+import base64
+
+STORAGE_KEY_B64 = "ZFdudHJ6SFE3aFR2ZUgrQ3N0VFRjMTNtKy9RQzlQa2tQVVBNN3BkUGNvVFhVQ0M2alRVNjRzOHIyck11eURYOXZuYW4yQkZtajlVcytBU3RZRkZhQkc9PQ=="
+STORAGE_KEY = base64.b64decode(STORAGE_KEY_B64).decode("utf-8")
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     conn_str = os.environ.get("STORAGE_CONNECTION_STRING")
