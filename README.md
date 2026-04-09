@@ -10,16 +10,16 @@
 
 ## 📖 Overview
 
-**Nebula Drive** is a web-based file management application built on top of Azure SMB File Shares. It provides users with a seamless, cloud-powered experience to upload, browse, download, and manage files — all from the browser, without needing to mount a network drive.
+**Nebula Drive** is a web-based file management application built on top of Azure SMB File Shares. It provides users with a seamless, cloud-powered NAS experience to upload, browse, download, and manage files by simply mounting a network drive.
 
 ---
 
 ## ✨ Features
 
-- 📁 **Browse & Navigate** — Explore your Azure File Share directory structure with ease
-- ⬆️ **Upload Files** — Drag and drop or select files to upload directly to Azure File Share
-- ⬇️ **Download Files** — Instantly download files stored in the cloud
-- 🗑️ **Delete Files & Folders** — Remove unwanted files directly from the UI
+- 📁 **Browse & Navigate** — Explore your SMB Drive directory structure with ease
+- ⬆️ **Upload Files** — Drag and drop or select files to upload directly to Mapped Network Drive
+- ⬇️ **Download Files** — Instantly access files stored in the cloud
+- 🗑️ **Delete Files & Folders** — Use just like your normal NAS Drive
 - 📂 **Create Folders** — Organise your files with custom directory structures
 - 🔒 **Secure Access** — Authenticated access backed by Azure credentials
 - ☁️ **Azure-Powered** — Leverages Azure SMB File Share for reliable, scalable storage
@@ -55,14 +55,13 @@ Azure SMB File Share (Storage Account)
 Visit https://nebuladrive.cloud 
 
 ---
-## 🛡️ Security
+## 🛡️ Secure & Reliable
 
-- All credentials are managed via environment variables — never hardcoded
-- Azure Storage Account keys should be rotated regularly
-- Consider using **Azure Managed Identity** for production deployments
-- Enable **HTTPS only** on your Azure App Service
-- Restrict access using **Azure Active Directory** or IP allowlisting if needed
-
+- Uses GitHub OAuth, user credentials are stored on site
+- Netork Mapped Drive is built on Azure Files technology
+- 99.99% Availability with Transaction Optimized Speed
+- Storage Capacity expandable to Petabyte Scale
+- Global Secure Access
 ---
 
 ## 📦 Tech Stack
@@ -70,10 +69,10 @@ Visit https://nebuladrive.cloud
 | Layer | Technology |
 |-------|------------|
 | Frontend | HTML, CSS, JavaScript |
-| Backend | Node.js / Express (or your framework) |
+| Backend | Python API |
 | Storage | Azure SMB File Share |
-| Hosting | Azure App Service |
-| Auth | Azure Storage Account Key / Managed Identity |
+| Hosting | Azure Static Web App Service |
+| Auth | GitHub OAuth |
 
 ---
 
