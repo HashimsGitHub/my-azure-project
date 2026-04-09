@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>SMB Provisioner Prototype</h1>
+    <div id="user-info">Loading...</div>
+    <button id="create-btn" style="display:none;" onclick="provision()">Create My File Share</button>
+    <p id="status"></p>
+
+    <script>
+        async function checkAuth() {
+            const res = await fetch('/.auth/me');
+            const data = await res.json();
+            if (data.clientPrincipal) {
+                document.getElementById('user-info').innerText = `Hello, ${data.clientPrincipal.userDetails}`;
+                document.getElementById('create-btn').style.display = 'block';
+            } else {
+                document.getElementById('user-info').innerHTML = '<a href="/.auth/login/github">Login with GitHub</a>';
+            }
+        }
+        async function provision() {
+            const status = document.getElementById('status');
+            status.innerText = "Provisioning in Australia East...";
+            const res = await fetch('/api/provision_share', { method: 'POST' });
+            status.innerText = res.ok ? "Success! Share created." : "Failed to create share.";
+        }
+        checkAuth();
+    </script>
+</body>
+</html>
