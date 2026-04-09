@@ -343,21 +343,21 @@
               <code id="unc-path" style="word-break: break-all;">\\smbclouddrive.file.core.windows.net\your-share</code>
               <button class="btn-neon" style="padding: 4px 14px;" onclick="copyText('unc-path', this)">COPY</button>
             </div>
-            <p class="ai-badge" style="margin-top: 8px;">✔️ Use different credentials</p>
+            
           </div>
 
           <div class="step" style="margin-bottom: 1.8rem;">
-            <p style="font-weight: 600; margin-bottom: 8px;">🔑 3. Storage credentials (Azure key)</p>
+            <p style="font-weight: 600; margin-bottom: 8px;">🔑 3. Storage credentials</p>
             <div class="key-container">
               <span style="font-family: monospace; font-size: 0.8rem;">Username: </span>
               <code style="flex:1;">AZURE\smbclouddrive</code>
               <button class="btn-neon" onclick="copyVal('AZURE\\smbclouddrive', this)">COPY</button>
             </div>
             <div class="key-container" style="margin-top: 10px;">
-              <span style="font-family: monospace; font-size: 0.8rem;">Password (Key): </span>
+              <span style="font-family: monospace; font-size: 0.8rem;">Password (YouKey): </span>
               <span style="font-family: monospace; flex:1; word-break: break-all;" id="key-hidden" class="key-hidden">••••••••••••••••••••••••••</span>
               <span id="key-actual" style="display:none; font-family: monospace;"></span>
-              <button class="btn-neon" onclick="toggleKey()" style="padding: 4px 12px;">👁️</button>
+              <button class="btn-neon" onclick="toggleKey()" style="padding: 4px 12px;">👁</button>
               <button class="btn-neon" onclick="copyVal(storageKey, this)">COPY</button>
             </div>
           </div>
@@ -372,8 +372,8 @@
           </div>
 
           <div class="success-pulse" style="margin-top: 20px; display: flex; gap: 12px; align-items: center;">
-            <span>🧠</span>
-            <span><strong>AI active · share ready</strong><br>Drag & drop files like local disk — end-to-end encrypted</span>
+            <span>☁</span>
+            <span><strong>Your NAS drive is ready</strong><br>Just Drag-&-Drop files like it's local drive — End-to-End Encrypted</span>
           </div>
         </div>
       </div>
