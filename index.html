@@ -267,19 +267,30 @@
       document.getElementById('main-view').style.display = 'none';
       document.getElementById('topbar-right').style.display = 'none';
       document.getElementById('steps-section').style.display = 'none';
-      document.getElementById('create-btn').disabled = false;
-      document.getElementById('create-btn').innerText = 'Provision my file share';
+      var btn = document.getElementById('create-btn');
+      btn.disabled = false;
+      btn.innerText = 'Provision my file share';
       document.getElementById('status').innerText = '';
-      window.location.href = '/.auth/logout';
+      storageKey = '';
+      keyVisible = false;
+      document.getElementById('key-hidden').style.display = 'inline';
+      document.getElementById('key-actual').style.display = 'none';
+      fetch('/.auth/logout').finally(function() {
+        window.location.reload();
+      });
     }
 
     function showMainView(name) {
       document.getElementById('auth-view').style.display = 'none';
       document.getElementById('main-view').style.display = 'block';
-      document.getElementById('topbar-right').style.display = 'flex';
+      var topbarRight = document.getElementById('topbar-right');
+      topbarRight.style.display = 'flex';
+      topbarRight.style.alignItems = 'center';
+      topbarRight.style.gap = '10px';
       var initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2);
       document.getElementById('topbar-avatar').innerText = initials;
       document.getElementById('topbar-username').innerText = name;
+      document.getElementById('topbar-right').querySelector('button').style.display = 'inline-block';
     }
 
     async function checkAuth() {
@@ -295,9 +306,14 @@
         if (data.clientPrincipal) {
           var name = data.clientPrincipal.userDetails;
           currentUser = { name: name, email: '' };
+          localStorage.setItem('swa_session', JSON.stringify(currentUser));
           showMainView(name);
+        } else {
+          document.getElementById('auth-view').style.display = 'block';
         }
-      } catch(e) {}
+      } catch(e) {
+        document.getElementById('auth-view').style.display = 'block';
+      }
     }
 
     async function provision() {
