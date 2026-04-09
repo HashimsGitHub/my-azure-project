@@ -1,49 +1,42 @@
 import azure.functions as func
 import os
-import traceback
-from azure.storage.fileshare import ShareServiceClient
-from azure.core.exceptions import ResourceExistsError
-from pymongo import MongoClient
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
+    
+    # Test 1: Can we import the storage package?
+    try:
+        from azure.storage.fileshare import ShareServiceClient
+    except Exception as e:
+        return func.HttpResponse(f"FAIL import ShareServiceClient: {str(e)}", status_code=500)
+
+    # Test 2: Can we import pymongo?
+    try:
+        from pymongo import MongoClient
+    except Exception as e:
+        return func.HttpResponse(f"FAIL import MongoClient: {str(e)}", status_code=500)
+
+    # Test 3: Can we read env vars?
     conn_str = os.environ.get("STORAGE_CONNECTION_STRING")
     mongo_uri = os.environ.get("MONGODB_URI")
-
     if not conn_str:
-        return func.HttpResponse("Missing STORAGE_CONNECTION_STRING", status_code=500)
+        return func.HttpResponse("FAIL: STORAGE_CONNECTION_STRING is None", status_code=500)
     if not mongo_uri:
-        return func.HttpResponse("Missing MONGODB_URI", status_code=500)
+        return func.HttpResponse("FAIL: MONGODB_URI is None", status_code=500)
 
-    user_id = req.headers.get("X-MS-CLIENT-PRINCIPAL-ID", "tester_user")
-
+    # Test 4: Can we connect to Storage?
     try:
-        # --- STAGE 1: AZURE STORAGE ---
-        clean_id = "".join(filter(str.isalnum, user_id.lower()))
-        share_name = f"fs-{clean_id[:10]}"
+        svc = ShareServiceClient.from_connection_string(conn_str)
+        shares = list(svc.list_shares())
+        share_names = [s['name'] for s in shares]
+    except Exception as e:
+        return func.HttpResponse(f"FAIL Storage connect: {str(e)}", status_code=500)
 
-        service_client = ShareServiceClient.from_connection_string(conn_str)
-        share_client = service_client.get_share_client(share_name)
+    # Test 5: Can we connect to MongoDB?
+    try:
+        from pymongo import MongoClient
+        client = MongoClient(mongo_uri, serverSelectionTimeoutMS=3000)
+        client.admin.command('ping')
+    except Exception as e:
+        return func.HttpResponse(f"FAIL MongoDB connect: {str(e)}", status_code=500)
 
-        try:
-            share_client.create_share(quota=5)
-        except ResourceExistsError:
-            pass  # Already exists, that's fine
-
-        # --- STAGE 2: MONGODB ---
-        try:
-            client = MongoClient(mongo_uri, serverSelectionTimeoutMS=3000)
-            db = client.get_default_database()
-            db.shares.update_one(
-                {"user_id": user_id},
-                {"$set": {"share_name": share_name}},
-                upsert=True
-            )
-        except Exception as db_err:
-            return func.HttpResponse(
-                f"Share created, but DB log failed: {str(db_err)}", status_code=201
-            )
-
-        return func.HttpResponse("Success: Share and DB updated.", status_code=201)
-
-    except Exception:
-        return func.HttpResponse(traceback.format_exc(), status_code=500)
+    return func.HttpResponse(f"ALL OK. Shares found: {share_names}", status_code=200)
