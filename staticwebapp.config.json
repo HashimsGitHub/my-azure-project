@@ -2,7 +2,7 @@
   "routes": [
     {
       "route": "/api/provision_share",
-      "allowedRoles": ["authenticated"]
+      "allowedRoles": ["anonymous"]
     },
     {
       "route": "/.auth/login/github",
