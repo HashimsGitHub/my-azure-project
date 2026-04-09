@@ -24,6 +24,14 @@
             status.innerText = res.ok ? "Success! Share created." : "Failed to create share.";
         }
         checkAuth();
+
+        async function provision() {
+            const status = document.getElementById('status');
+            status.innerText = "Provisioning...";
+            const res = await fetch('/api/provision_share', { method: 'POST' });
+            const text = await res.text();
+            status.innerText = `[${res.status}] ${text}`;
+        }
     </script>
 </body>
 </html>

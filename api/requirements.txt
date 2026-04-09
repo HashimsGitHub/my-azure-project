@@ -1,4 +1,4 @@
 azure-functions
-azure-storage-file-share
-pymongo[srv]
-dnspython
+azure-storage-file-share==12.15.0
+pymongo[srv]==4.6.3
+dnspython==2.6.1
