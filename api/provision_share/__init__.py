@@ -1,31 +1,21 @@
-import azure.functions as func
-from azure.identity import DefaultAzureCredential
-from azure.mgmt.storage import StorageManagementClient
-from pymongo import MongoClient
 import os
+from azure.storage.file_share import ShareServiceClient
+import azure.functions as func
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     user_id = req.headers.get("X-MS-CLIENT-PRINCIPAL-ID")
-    
-    # Connect to MongoDB
-    client = MongoClient(os.environ["MONGODB_URI"])
-    db = client.file_shares_db
-
-    # Azure Provisioning
-    cred = DefaultAzureCredential()
-    storage_client = StorageManagementClient(cred, os.environ["AZURE_SUBSCRIPTION_ID"])
-    
-    share_name = f"share-{user_id[:6]}"
+    connection_string = os.environ["STORAGE_CONNECTION_STRING"]
     
     try:
-        storage_client.file_shares.create(
-            "Your-Resource-Group", 
-            "Your-Storage-Account", 
-            share_name, 
-            {"share_quota": 10}
-        )
-        # Log to MongoDB
-        db.shares.insert_one({"user": user_id, "share": share_name})
-        return func.HttpResponse("Created", status_code=201)
+        # Create the client using the Connection String
+        service_client = ShareServiceClient.from_connection_string(connection_string)
+        
+        share_name = f"share-{user_id[:6]}"
+        share_client = service_client.get_share_client(share_name)
+        
+        # Create the share
+        share_client.create_share(quota=10) # 10GB for prototype
+        
+        return func.HttpResponse("Share created successfully!", status_code=201)
     except Exception as e:
-        return func.HttpResponse(str(e), status_code=500)
+        return func.HttpResponse(f"Error: {str(e)}", status_code=500)
