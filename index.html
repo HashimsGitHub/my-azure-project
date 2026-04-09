@@ -10,7 +10,7 @@
 
     .topbar { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; }
     .topbar-title { font-size: 15px; font-weight: 500; }
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .topbar-right { display: none; align-items: center; gap: 10px; }
     .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
     .topbar-user { font-size: 13px; color: #555; }
 
@@ -19,30 +19,27 @@
     .btn { padding: 8px 16px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
     .btn:hover { background: #f5f5f5; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary { background: #1a56db; color: #fff; border-color: #1a56db; }
-    .btn-primary:hover { background: #1648c0; }
-    .btn-danger { background: #fff; color: #dc2626; border-color: #dc2626; }
+    .btn-danger { color: #dc2626; border-color: #fca5a5; background: #fff; }
     .btn-danger:hover { background: #fef2f2; }
     .btn-full { width: 100%; padding: 10px; font-size: 15px; }
+    .btn-primary { background: #1a56db; color: #fff; border-color: #1a56db; }
+    .btn-primary:hover { background: #1648c0; }
 
-    .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+    .card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
 
-    .auth-panel { max-width: 400px; margin: 3rem auto; }
-    .auth-panel h2 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
-    .auth-panel p { font-size: 13px; color: #666; margin-bottom: 1.25rem; }
-    .auth-tabs { display: flex; gap: 0; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; }
-    .auth-tab { flex: 1; padding: 8px; font-size: 14px; border: none; background: #fff; cursor: pointer; color: #555; }
-    .auth-tab.active { background: #1a56db; color: #fff; font-weight: 500; }
+    .auth-panel { max-width: 400px; margin: 4rem auto; }
+    .auth-panel h2 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+    .auth-panel p { font-size: 13px; color: #666; margin-bottom: 1.5rem; line-height: 1.5; }
 
-    .field { margin-bottom: 1rem; }
-    .field label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; color: #333; }
-    .field input { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 8px; outline: none; background: #fff; color: #1a1a1a; }
-    .field input:focus { border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
+    .oauth-btn { width: 100%; padding: 10px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #e5e5e5; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+    .oauth-btn:hover { background: #f5f5f5; }
+    .oauth-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
-    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
-    .github-btn { width: 100%; padding: 9px; font-size: 14px; font-weight: 500; border-radius: 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .github-btn:hover { background: #f5f5f5; }
-    .github-icon { width: 18px; height: 18px; }
+    .divider-label { display: flex; align-items: center; gap: 10px; margin: 1rem 0; }
+    .divider-label span { font-size: 12px; color: #aaa; white-space: nowrap; }
+    .divider-label hr { flex: 1; border: none; border-top: 1px solid #e5e5e5; }
+
+    .security-note { font-size: 12px; color: #888; text-align: center; margin-top: 1rem; line-height: 1.5; }
 
     .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1rem; }
     .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #e8f0fe; color: #1a56db; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -54,25 +51,26 @@
     .copy-btn:hover { background: #f0f0f0; }
 
     .key-box { background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 13px; display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-    .key-value { flex: 1; word-break: break-all; color: #1a1a1a; }
+    .key-value { flex: 1; word-break: break-all; }
     .key-hidden { letter-spacing: 3px; color: #999; user-select: none; }
     .eye-btn { min-width: 36px; height: 30px; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .eye-btn:hover { background: #f0f0f0; }
 
     .success-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 13px; color: #166534; }
-    .error-msg { font-size: 13px; color: #dc2626; text-align: center; margin: 8px 0 0; }
     .section-label { font-size: 11px; font-weight: 500; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.25rem 0; }
 
     #main-view { display: none; }
     #steps-section { display: none; }
+    #loading-view { text-align: center; padding: 4rem 1rem; color: #888; font-size: 14px; }
   </style>
 </head>
 <body>
 
   <div class="topbar">
     <span class="topbar-title">Cloud file share</span>
-    <div class="topbar-right" id="topbar-right" style="display:none;">
-      <div class="avatar" id="topbar-avatar">?</div>
+    <div class="topbar-right" id="topbar-right">
+      <div class="avatar" id="topbar-avatar"></div>
       <span class="topbar-user" id="topbar-username"></span>
       <button class="btn btn-danger" onclick="signOut()">Sign out</button>
     </div>
@@ -80,55 +78,32 @@
 
   <div class="container">
 
-    <div id="auth-view">
+    <div id="loading-view">Checking authentication...</div>
+
+    <div id="auth-view" style="display:none;">
       <div class="auth-panel">
         <div class="card">
-          <h2>Welcome</h2>
-          <p>Sign in or register to provision your personal Azure file share.</p>
+          <h2>Sign in</h2>
+          <p>Authenticate with your GitHub or Microsoft account to provision your personal Azure file share.</p>
 
-          <div class="auth-tabs">
-            <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign in</button>
-            <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
-          </div>
-
-          <div id="signin-form">
-            <div class="field">
-              <label>Email</label>
-              <input type="email" id="signin-email" placeholder="you@example.com">
-            </div>
-            <div class="field">
-              <label>Password</label>
-              <input type="password" id="signin-password" placeholder="••••••••">
-            </div>
-            <p id="signin-error" class="error-msg" style="margin-bottom:8px;"></p>
-            <button class="btn btn-primary btn-full" onclick="handleSignIn()">Sign in</button>
-          </div>
-
-          <div id="register-form" style="display:none;">
-            <div class="field">
-              <label>Full name</label>
-              <input type="text" id="reg-name" placeholder="Hashim Ahmed">
-            </div>
-            <div class="field">
-              <label>Email</label>
-              <input type="email" id="reg-email" placeholder="you@example.com">
-            </div>
-            <div class="field">
-              <label>Password</label>
-              <input type="password" id="reg-password" placeholder="••••••••">
-            </div>
-            <p id="reg-error" class="error-msg" style="margin-bottom:8px;"></p>
-            <button class="btn btn-primary btn-full" onclick="handleRegister()">Create account</button>
-          </div>
-
-          <div class="divider"></div>
-
-          <button class="github-btn" onclick="window.location.href='/.auth/login/github'">
-            <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor">
+          <button class="oauth-btn" onclick="window.location.href='/.auth/login/github?post_login_redirect_uri=/'">
+            <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
             </svg>
             Continue with GitHub
           </button>
+
+          <button class="oauth-btn" onclick="window.location.href='/.auth/login/aad?post_login_redirect_uri=/'">
+            <svg class="oauth-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M11.5 0L0 6.5V12l11.5 6.5L23 12V6.5L11.5 0z" fill="#F25022"/>
+              <path d="M0 12v5.5L11.5 24V18.5L0 12z" fill="#00A4EF"/>
+              <path d="M23 12L11.5 18.5V24L23 17.5V12z" fill="#7FBA00"/>
+              <path d="M11.5 0L0 6.5V12l11.5-6.5L23 12V6.5L11.5 0z" fill="#FFB900" opacity="0.6"/>
+            </svg>
+            Continue with Microsoft
+          </button>
+
+          <p class="security-note">Only GitHub and Microsoft accounts are accepted. No passwords are stored by this application.</p>
         </div>
       </div>
     </div>
@@ -175,17 +150,17 @@
             </div>
             <p class="step-desc" style="margin-top: 10px;">Storage account key (password):</p>
             <div class="key-box">
-              <span class="key-value" id="key-display">
+              <span class="key-value">
                 <span id="key-hidden" class="key-hidden">••••••••••••••••••••••••••••••••</span>
                 <span id="key-actual" style="display:none;"></span>
               </span>
-              <button class="eye-btn" id="eye-btn" onclick="toggleKey()">
+              <button class="eye-btn" onclick="toggleKey()">
                 <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                   <circle cx="12" cy="12" r="3"/>
                 </svg>
               </button>
-              <button class="copy-btn" onclick="copyVal(storageKey, this)">Copy</button>
+              <button class="copy-btn" id="key-copy-btn" onclick="copyVal(storageKey, this)">Copy</button>
             </div>
           </div>
         </div>
@@ -214,106 +189,43 @@
   <script>
     var storageKey = '';
     var keyVisible = false;
-    var currentUser = null;
-
-    var DEMO_USERS = JSON.parse(localStorage.getItem('swa_users') || '{}');
-
-    function saveUsers() {
-      localStorage.setItem('swa_users', JSON.stringify(DEMO_USERS));
-    }
-
-    function switchTab(tab) {
-      document.getElementById('tab-signin').classList.toggle('active', tab === 'signin');
-      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-      document.getElementById('signin-form').style.display = tab === 'signin' ? 'block' : 'none';
-      document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
-      document.getElementById('signin-error').innerText = '';
-      document.getElementById('reg-error').innerText = '';
-    }
-
-    function handleSignIn() {
-      var email = document.getElementById('signin-email').value.trim();
-      var password = document.getElementById('signin-password').value;
-      var err = document.getElementById('signin-error');
-      if (!email || !password) { err.innerText = 'Please fill in all fields.'; return; }
-      var user = DEMO_USERS[email];
-      if (!user || user.password !== password) { err.innerText = 'Invalid email or password.'; return; }
-      loginUser(user.name, email);
-    }
-
-    function handleRegister() {
-      var name = document.getElementById('reg-name').value.trim();
-      var email = document.getElementById('reg-email').value.trim();
-      var password = document.getElementById('reg-password').value;
-      var err = document.getElementById('reg-error');
-      if (!name || !email || !password) { err.innerText = 'Please fill in all fields.'; return; }
-      if (password.length < 6) { err.innerText = 'Password must be at least 6 characters.'; return; }
-      if (DEMO_USERS[email]) { err.innerText = 'An account with this email already exists.'; return; }
-      DEMO_USERS[email] = { name: name, email: email, password: password };
-      saveUsers();
-      loginUser(name, email);
-    }
-
-    function loginUser(name, email) {
-      currentUser = { name: name, email: email };
-      localStorage.setItem('swa_session', JSON.stringify(currentUser));
-      showMainView(name);
-    }
-
-    function signOut() {
-      localStorage.removeItem('swa_session');
-      currentUser = null;
-      document.getElementById('auth-view').style.display = 'block';
-      document.getElementById('main-view').style.display = 'none';
-      document.getElementById('topbar-right').style.display = 'none';
-      document.getElementById('steps-section').style.display = 'none';
-      var btn = document.getElementById('create-btn');
-      btn.disabled = false;
-      btn.innerText = 'Provision my file share';
-      document.getElementById('status').innerText = '';
-      storageKey = '';
-      keyVisible = false;
-      document.getElementById('key-hidden').style.display = 'inline';
-      document.getElementById('key-actual').style.display = 'none';
-      fetch('/.auth/logout').finally(function() {
-        window.location.reload();
-      });
-    }
-
-    function showMainView(name) {
-      document.getElementById('auth-view').style.display = 'none';
-      document.getElementById('main-view').style.display = 'block';
-      var topbarRight = document.getElementById('topbar-right');
-      topbarRight.style.display = 'flex';
-      topbarRight.style.alignItems = 'center';
-      topbarRight.style.gap = '10px';
-      var initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2);
-      document.getElementById('topbar-avatar').innerText = initials;
-      document.getElementById('topbar-username').innerText = name;
-      document.getElementById('topbar-right').querySelector('button').style.display = 'inline-block';
-    }
 
     async function checkAuth() {
-      var session = localStorage.getItem('swa_session');
-      if (session) {
-        currentUser = JSON.parse(session);
-        showMainView(currentUser.name);
-        return;
-      }
       try {
         var res = await fetch('/.auth/me');
         var data = await res.json();
+        document.getElementById('loading-view').style.display = 'none';
         if (data.clientPrincipal) {
-          var name = data.clientPrincipal.userDetails;
-          currentUser = { name: name, email: '' };
-          localStorage.setItem('swa_session', JSON.stringify(currentUser));
-          showMainView(name);
+          showMainView(data.clientPrincipal.userDetails, data.clientPrincipal.identityProvider);
         } else {
           document.getElementById('auth-view').style.display = 'block';
         }
       } catch(e) {
+        document.getElementById('loading-view').style.display = 'none';
         document.getElementById('auth-view').style.display = 'block';
       }
+    }
+
+    function showMainView(name, provider) {
+      document.getElementById('auth-view').style.display = 'none';
+      document.getElementById('main-view').style.display = 'block';
+      var topbar = document.getElementById('topbar-right');
+      topbar.style.display = 'flex';
+      var initials = name.split(' ').map(function(w){ return w[0] || ''; }).join('').toUpperCase().slice(0, 2) || name.slice(0,2).toUpperCase();
+      document.getElementById('topbar-avatar').innerText = initials;
+      document.getElementById('topbar-username').innerText = name + (provider ? ' (' + provider + ')' : '');
+    }
+
+    async function signOut() {
+      var btn = document.querySelector('#topbar-right .btn-danger');
+      btn.disabled = true;
+      btn.innerText = 'Signing out...';
+      try {
+        await fetch('/.auth/logout', { method: 'GET', credentials: 'include' });
+      } catch(e) {}
+      sessionStorage.clear();
+      localStorage.clear();
+      window.location.href = '/.auth/logout?post_logout_redirect_uri=/';
     }
 
     async function provision() {
@@ -332,8 +244,7 @@
           var parts = text.split('|');
           var shareName = parts[1] || 'your-share';
           storageKey = parts[2] || '';
-          var uncPath = '\\\\smbclouddrive.file.core.windows.net\\' + shareName;
-          document.getElementById('unc-path').innerText = uncPath;
+          document.getElementById('unc-path').innerText = '\\\\smbclouddrive.file.core.windows.net\\' + shareName;
           document.getElementById('key-actual').innerText = storageKey;
           document.getElementById('steps-section').style.display = 'block';
           btn.innerText = 'Share provisioned';
@@ -357,25 +268,20 @@
       keyVisible = !keyVisible;
       document.getElementById('key-hidden').style.display = keyVisible ? 'none' : 'inline';
       document.getElementById('key-actual').style.display = keyVisible ? 'inline' : 'none';
-      var icon = document.getElementById('eye-icon');
-      if (keyVisible) {
-        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
-      } else {
-        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-      }
+      document.getElementById('eye-icon').innerHTML = keyVisible
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
     }
 
     function copyText(id, btn) {
       navigator.clipboard.writeText(document.getElementById(id).innerText).then(function() {
-        btn.innerText = 'Copied';
-        setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
+        btn.innerText = 'Copied'; setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
       });
     }
 
     function copyVal(val, btn) {
       navigator.clipboard.writeText(val).then(function() {
-        btn.innerText = 'Copied';
-        setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
+        btn.innerText = 'Copied'; setTimeout(function(){ btn.innerText = 'Copy'; }, 1500);
       });
     }
 
