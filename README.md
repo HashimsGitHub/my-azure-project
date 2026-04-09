@@ -52,7 +52,7 @@ Azure SMB File Share (Storage Account)
 
 ## 🚀 Getting Started
 
-Visit www.nebuladrive.cloud 
+Visit https://nebuladrive.cloud 
 
 ---
 ## 🛡️ Security
